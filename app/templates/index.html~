@@ -1,0 +1,12 @@
+<html>
+  <head>
+    <title>{{title}} -    ! {{}} are placeholders for dynamic contents
+      microblog</title>
+  </head>
+
+  <body>
+    <h1>Hello, {{user.nickname}}!
+    </h1>
+  </body>
+  
+</html>

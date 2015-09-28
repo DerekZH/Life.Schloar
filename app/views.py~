@@ -1,0 +1,92 @@
+from flask import render_template, request, url_for
+from app import app
+import pymysql as mdb
+from a_Model import ModelIt
+import pandas as pd
+from lda_w2v_recommender.lda_w2v_recommender import lda_w2v_recommender, lda_w2v_loader
+
+db = mdb.connect(user='root', host='localhost', passwd="chaoshiz", db='world', charset='utf8', port=3307)
+
+lda, LDA_results, mycorpus_dict, w2v, w2v_course_with_top_words = lda_w2v_loader()
+
+#LDA_results = pd.read_csv('Udemy_Coursera_4000_LDA_results.csv')
+
+
+@app.route('/')
+@app.route('/index')
+def index():
+    user = {'nickname':'Miguel'}
+    return render_template('index.html',
+                           title = 'Home',
+                           user = user)
+
+@app.route('/db')
+def cities_page():
+    with db:
+        cur = db.cursor()
+        cur.execute("SELECT Name FROM City LIMIT 15;")
+        query_results = cur.fetchall()
+        cities = ""
+        for result in query_results:
+            cities += result[0]
+            cities += "<br>"
+        return cities
+
+@app.route('/db_fancy')
+def cities_page_fancy():
+    with db:
+        cur = db.cursor()
+        cur.execute("SELECT Name, CountryCode, Population FROM City ORDER BY Population LIMIT 15;")
+        query_results = cur.fetchall()
+
+    cities = []
+    for result in query_results:
+        cities.append(dict(name=result[0], country=result[1], population=result[2]))
+    return render_template('cities.html', cities=cities)        
+        
+@app.route('/input')
+def cities_input():
+    return render_template('input.html')
+
+#@app.route('/output')
+#def cities_output():
+#    query_string = request.args.get("ID")
+#
+#    recommended_courses_lda, recommended_courses_w2v = lda_w2v_recommender(query_string, lda, LDA_results, mycorpus_dict, w2v, w2v_course_with_top_words)
+#    
+##    LDA_results = pd.read_csv('Udemy_Coursera_4000_LDA_results.csv')
+#    courses_lda = []
+#    courses_w2v = []
+#
+#    course_topic_dict = dict(zip(LDA_results.course_name, LDA_results.general_topics))
+#    course_provider_dict = dict(zip(LDA_results.course_name, LDA_results.provider))
+#
+#    for course in recommended_courses_lda:
+#        try:
+#            courses_lda.append(dict(name=course.encode('utf-8'), general_topics=course_topic_dict[course].encode('utf-8'), provider=course_provider_dict[course].encode('utf-8')))
+#        except:
+#            continue
+#        
+#    for course in recommended_courses_w2v:
+#        try:
+#            courses_w2v.append(dict(name=course.encode('utf-8'), general_topics=course_topic_dict[course].encode('utf-8'), provider=course_provider_dict[course].encode('utf-8')))
+#        except:
+#            continue
+#        
+#    return render_template('output.html', courses_lda = courses_lda, courses_w2v = courses_w2v)
+
+@app.route('/output')
+def cities_output():
+    query_string = request.args.get("ID")
+
+    recommended_courses_lda, recommended_courses_w2v = lda_w2v_recommender(query_string, lda, LDA_results, mycorpus_dict, w2v, w2v_course_with_top_words)
+    
+#    LDA_results = pd.read_csv('Udemy_Coursera_4000_LDA_results.csv')
+    courses_lda = []
+    courses_w2v = []
+
+    course_topic_dict = dict(zip(LDA_results.course_name, LDA_results.general_topics))
+    course_provider_dict = dict(zip(LDA_results.course_name, LDA_results.provider))
+        
+    return render_template('d3.html', courses_lda = '*'.join(recommended_courses_w2v))
+        
