@@ -11,43 +11,12 @@ lda, LDA_results, mycorpus_dict, w2v, w2v_course_with_top_words, w2v_course_sema
 
 #LDA_results = pd.read_csv('Udemy_Coursera_4000_LDA_results.csv')
 
-
 @app.route('/')
 @app.route('/index')
-def index():
-    user = {'nickname':'Miguel'}
-    return render_template('index.html',
-                           title = 'Home',
-                           user = user)
-
-@app.route('/db')
-def cities_page():
-    with db:
-        cur = db.cursor()
-        cur.execute("SELECT Name FROM City LIMIT 15;")
-        query_results = cur.fetchall()
-        cities = ""
-        for result in query_results:
-            cities += result[0]
-            cities += "<br>"
-        return cities
-
-@app.route('/db_fancy')
-def cities_page_fancy():
-    with db:
-        cur = db.cursor()
-        cur.execute("SELECT Name, CountryCode, Population FROM City ORDER BY Population LIMIT 15;")
-        query_results = cur.fetchall()
-
-    cities = []
-    for result in query_results:
-        cities.append(dict(name=result[0], country=result[1], population=result[2]))
-    return render_template('cities.html', cities=cities)        
-        
 @app.route('/input')
 def cities_input():
     print w2v_courses[0]
-    return render_template('input.html')
+    return render_template('input.html', w2v_courses = '*'.join(w2v_courses[:3125]+w2v_courses[3250:]))
 
 #@app.route('/output')
 #def cities_output():
@@ -77,17 +46,10 @@ def cities_input():
 #    return render_template('output.html', courses_lda = courses_lda, courses_w2v = courses_w2v)
 
 @app.route('/output')
-def cities_output():
+def course_output():
     query_string = request.args.get("ID")
 
-    recommended_courses_lda, recommended_courses_w2v = lda_w2v_recommender(query_string, lda, LDA_results, mycorpus_dict, w2v, w2v_course_with_top_words, w2v_course_semantic_matrix, w2v_course_semantic_norm, w2v_courses)
+    recommended_courses = lda_w2v_recommender(query_string, lda, LDA_results, mycorpus_dict, w2v, w2v_course_with_top_words, w2v_course_semantic_matrix, w2v_course_semantic_norm, w2v_courses)
     
-#    LDA_results = pd.read_csv('Udemy_Coursera_4000_LDA_results.csv')
-    courses_lda = []
-    courses_w2v = []
-
-    course_topic_dict = dict(zip(LDA_results.course_name, LDA_results.general_topics))
-    course_provider_dict = dict(zip(LDA_results.course_name, LDA_results.provider))
-        
-    return render_template('d3.html', courses_lda = '*'.join(recommended_courses_lda), courses_w2v = '*'.join(recommended_courses_w2v))
+    return render_template('d3.html', recommended_courses = ('*'.join(recommended_courses)).encode('utf-8'), w2v_courses = '*'.join(w2v_courses))
         

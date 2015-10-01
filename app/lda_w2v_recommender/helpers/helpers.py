@@ -10,6 +10,9 @@ import enchant
 def cos_similarity(a, b):
     return np.dot(a,b) / float(np.linalg.norm(a) * np.linalg.norm(b))
     
+def is_ascii(s):
+    return all(ord(c) < 128 for c in s)
+
 def paragraph_stemmer(string): #and non english word remover
     d = enchant.Dict("en_US")
     porter = nltk.stem.porter.PorterStemmer()
