@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -14,23 +13,36 @@
 
     <!-- Bootstrap core CSS -->
     <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">      
 
-    <!-- Custom styles for this template -->
-    <link href="starter-template.css" rel="stylesheet">
+    <style>
+      col,#c1 {
+          width:30px;
+      }
+      col,#c3 {
+          width:200px;
+      }
+      col,#c5 {
+          width:90px;
+      }
 
-    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
-    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
-    <script src="../../assets/js/ie-emulation-modes-warning.js"></script>
 
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-        <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-      <![endif]-->
+    .table {
+        width: auto;
+}
+      
+      
+      
+      
+      </style>
+      
   </head>
 
   <body>
 
+<!--
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
 	<div class="navbar-header">
@@ -48,71 +60,238 @@
 	    <li><a href="#about">About</a></li>
 	    <li><a href="#contact">Contact</a></li>
 	  </ul>
-	</div><!--/.nav-collapse -->
-          
-    <div>
-        <ul class="list-group">
-          <li class="list-group-item">Cras justo odio</li>
-          <li class="list-group-item">Dapibus ac facilisis in</li>
-          <li class="list-group-item">Morbi leo risus</li>
-          <li class="list-group-item">Porta ac consectetur ac</li>
-          <li class="list-group-item">Vestibulum at eros</li>
-        </ul>      
-    </div>
+	</div>
       </div>
     </nav>
+-->
 
       
 <br><br>
+<div class='container-fluid' id='backgroundshade'>
+      <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/input">Life.Scholar</a>
+            </div>
+            <div id="navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="/input">Home</a></li>
+                    <li><a href="/world_map">World Map</a></li>
+                    <li><a href="/slides">Slides</a></li>
+                </ul>
+            </div><!--/.nav-collapse -->
+          </div>
+      </nav>
+
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-sm-8", id='rightpane'>
+                <div class='container', id='box2'>
+                    <br>
+                    <br>
+                    <p id='relevance_para'> Try these courses that we think are most relevant:</p>
+                    
+                          <table class="table table-hover">
+                                  <colgroup>
+                                    <col span="1" id='c1'/>
+                                    <col span="1" id='c2'/>
+                                    <col span="1" id='c3'/>
+                                    <col span="1" id='c4'/>
+                                    <col span="1" id='c5'/>
+                                    <col span="1" id='c6'/>
+                                  </colgroup>
+
+                            <thread>
+                              <tr><th></th><th></th><th>Course Name</th><th>Provider</th><th>Effort (hr/wk)</th><th>Price</th></tr>
+                            </thread>
+                              {% for course in relevance_courses_for_html %}
+                              <tr onmouseenter={{ course['course_name_for_hover'] }}><td></td><td><img src={{ course['final_img'] }} width='140' height='90'></td><td><a href={{ course['final_link'] }}>{{ course['course_name'] }}</a></td><td>{{ course['final_provider'] }}</td><td> {{ course['effort_hr_wk'] }}</td><td> {{ course['final_price'] }}</td></tr>                          
+                              {% endfor %}
+                          </table> 
+ <br>
+                    <p id='serendipity_para'> Some additional courses that may fit your broader interest:</p>
+                    
+                          <table class="table table-hover">
+                                  <colgroup>
+                                    <col span="1" id='c1'/>
+                                    <col span="1" id='c2'/>
+                                    <col span="1" id='c3'/>
+                                    <col span="1" id='c4'/>
+                                    <col span="1" id='c5'/>
+                                    <col span="1" id='c6'/>
+                                  </colgroup>
+
+                            <thread>
+                              <tr><th></th><th></th><th>Course Name</th><th>Provider</th><th>Effort (hr/wk)</th><th>Price</th></tr>
+                            </thread>
+                              {% for course in serendipity_courses_for_html %}
+                              <tr onmouseenter={{ course['course_name_for_hover'] }}><td></td><td><img src={{ course['final_img'] }} width='140' height='90'></td><td><a href={{ course['final_link'] }}>{{ course['course_name'] }}</a></td><td>{{ course['final_provider'] }}</td><td> {{ course['effort_hr_wk'] }}</td><td> {{ course['final_price'] }}</td></tr>                          
+                              {% endfor %}
+                          </table>                     
+                </div>
+            </div>
+            
+            <div class="col-sm-4", id='leftpane'>
+                <div class='container', id='box', background-color='#eee'> 
+                
+                </div>
+            </div>
+            
+        </div>
+    </div> 
       
-      <div class="container">
-          <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-          <script src="static/js/bootstrap.min.js"></script>
-      </div> <!-- /.container-->
-
-    <div class="container", id='box'>
+</div>         
+      
+      
+<!--
+    <div id="option">
+    <input name="ShowContinentButton" 
+           type="button" 
+           value="Show Continents" 
+           onclick="showcontinents()" />
+    </div>
+-->
         
-      <div class="starter-template">
-        <p class="lead"> <br>We know EXACTLY what you want:</p>
-      </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.19/topojson.min.js"></script>
 
-      <table class="table table-hover">
-      <tr><th>Course Name</th><th>General Topics</th><th>Provider</th></tr>
-      {% for course in courses_w2v %}
-      <tr><td>{{ course['name'] }}</td><td>{{ course['general_topics']}}</td><td> {{ course['provider'] }}</td></tr>
-      {% endfor %}
-      </table>
+      
 
-      <p, class='lead'>Zooming out from the nitty-gritty, thinking your general interests fit the following courses:</p>
-      <table class="table table-hover">
-      <tr><th>Course Name</th><th>General Topics</th><th>Provider</th></tr>
-      {% for course in courses_lda %}
-      <tr><td>{{ course['name'] }}</td><td>{{ course['general_topics']}}</td><td> {{ course['provider'] }}</td></tr>
-      {% endfor %}
-      </table>        
-        
+<script>
+//    $("#box").css('background-color','rgba(240,240,240,0.9)').css('width','850px').css('position','fixed').css('top','17%').css('left','2.7%')//.css('margin-top','-'+$("#box").height()/2+'px').css('margin-left','-'+$("#box").width()/2+'px')
+//    $("#box2").css('width','450px').css('top','25%').css('left','40%')//.css('margin-top','-'+$("#box").height()/2+'px').css('margin-left','-'+$("#box").width()/2+'px')   .css('background-color','rgba(240,240,240,0.9)')
+    $("#backgroundshade").css('width','1200px').css('background-color','rgba(250,250,250,0.95)').css('top','25%').css('left','2.7%')//.css('margin-top','-'+$("#box").height()/2+'px').css('margin-left','-'+$("#box").width()/2+'px')   css('width','850px').  .css('position','fixed')
 
-     </div><!-- /.container -->
+    $("#relevance_para").css('font-size','24px')
+    $("#serendipity_para").css('font-size','24px')
 
-        <script>
-            $("#ID").css("width","200px")
-            $('tr').css('font-size','small')
-            $("#box").css('background-color','#eee')
-        </script>
-
-      <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-      <script src="static/js/bootstrap.min.js"></script>
+    $('.btn').css('line-height','10px').css('width','250px')
+//    $("#backgroundshade").css('background-color','rgba(240,240,240,0.9)')
+    $("#box").css('position', 'fixed').css('left','63%').css('top','15%');
+</script>    
 
 
-     </div><!-- /.container -->
+<script>
+    function hovercourse(course_name){
+    $("[id = '"+course_name+"']").css('r','50px')
+      };
+    
+    function unhovercourse(course_name){
+    $("[id = '"+course_name+"']").css('r','20px')
+      };
+
+</script>      
+      
+      
+<script>
+    
+var width = $(window).width() * 0.3,
+    height = $(window).height() * 0.7;
+
+var tooltip = d3.select("body")
+    .append("div")
+    .style("position", "absolute")
+    .style("z-index", "10")
+    .style("width","275px")                  
+    .style("height","80px")                 
+    .style("padding","2px")             
+    .style("font","18px georgia-serif")
+    .style("text-anchor", "middle")
+    .style("border","1px")      
+    .style("border-radius","2px")  
+    .style("background", "#cadddd")
+    .style("visibility", "hidden");
+
+    
+var svg = d3.select("#box").append("svg")
+    .attr("width", width+6)
+    .attr("height", height);
+
+var circles = svg.append("svg:g")
+            .attr("id", "circles");    
+
+var scale = d3.scale.linear()
+            .domain([-20,20]).range([0,400])    
+
+var recommended_courses = '{{ recommended_courses }}';
+var recommended_courses = recommended_courses.split('*');
+    
+d3.csv("static/LDA_results_CEU_26_topics.csv", function(error, data) {
+ 
+    circles.selectAll("dot")
+        .data(data.filter(function (d) {return recommended_courses.indexOf(d.course_name) > -1 })).enter()
+        .append("a")
+            .attr("xlink:href", function(d) { return d.link; })
+        .append("svg:circle")
+            .attr("cx", function (d) { return scale(d.tsne_1); })
+            .attr("cy", function (d) { return scale(d.tsne_2); })
+            .attr("r", "12px")
+            .attr("fill", function (d) { return d.color; })
+            .attr("stroke","rgba(100,100,100,1)")
+            .attr("opacity","1")
+            .attr('id', function(d) { return d.course_name_with_underscore})
+
+        .on("mouseover", function(d){
+            tooltip.html("  "+d.course_name+"<br/># Enrollment:"+d.total_enrollment+"<br/>Rating:"+d.rating);
+            tooltip.style("visibility", "visible")
+            tooltip.style("font-size","18px")
+            tooltip.style("top", (event.pageY-10)+"px")
+            tooltip.style("left",(event.pageX+10)+"px");
+        })
+    .on("mouseout", function(){return tooltip.style("visibility", "hidden");});
+});
+
+d3.csv("static/LDA_results_CEU_26_topics.csv", function(error, data) {
+    circles.selectAll("dot")
+        .data(data.filter(function (d) {return recommended_courses.indexOf(d.course_name)==-1 }))
+        .enter()
+        .append("svg:circle")
+            .attr("cx", function (d) { return scale(d.tsne_1); })
+            .attr("cy", function (d) { return scale(d.tsne_2); })
+            .attr("r", "7px")
+            .attr("fill", function (d) { return d.color; })
+            .attr("stroke","rgba(250,250,250,0.5)")
+            .attr("opacity","0.05")
+            .attr('id', function(d) { return d.course_name_with_underscore});
+
+});
 
 
-        <!-- Bootstrap core JavaScript
-	     ================================================== -->
-	<!-- Placed at the end of the document so the pages load faster -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-	<script src="static/js/bootstrap.min.js"></script>
-	<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-	<script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
-  </body>
-</html>
+//d3.select("#box2").append("ul").selectAll("li")
+//    .data(recommended_courses)
+//    .enter().append('li')
+//    .html(function (d) { return d;})
+//    .style('font-size', '16px')
+//    .attr('class','list-group-item');
+
+//d3.select("#box2").append("div", ".list-group").selectAll("a")
+//    .data(recommended_courses_w2v)
+//    .enter().append('li')
+//    .html(function (d) { return d;});    
+    
+//d3.select("#box2").append("p").selectAll("p")
+//    .data([1])
+//    .enter().append('p')
+//    .html('You may also like these broader couress:')
+//    .style('font-size', '16px');
+//
+//
+//d3.select("#box2").append("ul").selectAll("li")
+//    .data(recommended_courses_lda)
+//    .enter().append('li')
+//    .html(function (d) { return d;})
+//    .style('font-size', '16px')
+//    .attr('class','list-group-item');
+
+d3.select("#box2").append("br");
+d3.select("#box2").append("br");
+
+d3.select(self.frameElement).style("height", height + "px");    
+    
+</script>
