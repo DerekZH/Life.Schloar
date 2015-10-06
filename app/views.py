@@ -60,7 +60,7 @@ def course_output():
     
     recommended_courses = relevance_courses + serendipity_courses
     
-    cols = ['course_name','tsne_1','tsne_2','total_enrollment', 'final_provider', 'final_link', 'effort_hr_wk', 'final_price', 'final_img','course_name_for_hover','course_name_for_unhover', 'course_name_with_underscore']
+    cols = ['course_name','tsne_1','tsne_2','total_enrollment', 'final_provider', 'final_link', 'final_effort', 'final_price', 'final_img','course_name_for_hover','course_name_for_unhover', 'course_name_with_underscore']
     relevance_courses_for_html = LDA_results.loc[LDA_results.course_name.isin(relevance_courses)][cols].to_dict('records')
     serendipity_courses_for_html = LDA_results.loc[LDA_results.course_name.isin(serendipity_courses)][cols].to_dict('records')
 
@@ -78,3 +78,11 @@ def course_map_output():
 @app.route('/slides')
 def slides_output():
     return render_template('slides.html')
+
+#@app.errorhandler(404)
+#def page_not_found(e):
+#  return render_template('404.html'), 404
+
+@app.errorhandler(500)
+def page_not_found(e):
+    return render_template('500.html'), 500

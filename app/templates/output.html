@@ -91,7 +91,7 @@
 
     <div class="container-fluid">
         <div class="row-fluid">
-            <div class="col-sm-8", id='rightpane'>
+            <div class="col-sm-12", id='rightpane'>
                 <div class='container', id='box2'>
                     <br>
                     <br>
@@ -108,10 +108,10 @@
                                   </colgroup>
 
                             <thread>
-                              <tr><th></th><th></th><th>Course Name</th><th>Provider</th><th>Effort (hr/wk)</th><th>Price</th></tr>
+                              <tr><th></th><th></th><th>Course Name</th><th>Provider</th><th>Effort (hr/wk)</th><th>Price ($)</th></tr>
                             </thread>
                               {% for course in relevance_courses_for_html %}
-                              <tr onmouseenter={{ course['course_name_for_hover'] }}><td></td><td><img src={{ course['final_img'] }} width='140' height='90'></td><td><a href={{ course['final_link'] }}>{{ course['course_name'] }}</a></td><td>{{ course['final_provider'] }}</td><td> {{ course['effort_hr_wk'] }}</td><td> {{ course['final_price'] }}</td></tr>                          
+                              <tr><td></td><td><img src={{ course['final_img'] }} width='140' height='90'></td><td><a href={{ course['final_link'] }}>{{ course['course_name'] }}</a></td><td>{{ course['final_provider'] }}</td><td> {{ course['final_effort'] }}</td><td> {{ course['final_price'] }}</td></tr>                          
                               {% endfor %}
                           </table> 
  <br>
@@ -131,17 +131,19 @@
                               <tr><th></th><th></th><th>Course Name</th><th>Provider</th><th>Effort (hr/wk)</th><th>Price</th></tr>
                             </thread>
                               {% for course in serendipity_courses_for_html %}
-                              <tr onmouseenter={{ course['course_name_for_hover'] }}><td></td><td><img src={{ course['final_img'] }} width='140' height='90'></td><td><a href={{ course['final_link'] }}>{{ course['course_name'] }}</a></td><td>{{ course['final_provider'] }}</td><td> {{ course['effort_hr_wk'] }}</td><td> {{ course['final_price'] }}</td></tr>                          
+                              <tr onmouseenter={{ course['course_name_for_hover'] }}><td></td><td><img src={{ course['final_img'] }} width='140' height='90'></td><td><a href={{ course['final_link'] }}>{{ course['course_name'] }}</a></td><td>{{ course['final_provider'] }}</td><td> {{ course['final_effort'] }}</td><td> {{ course['final_price'] }}</td></tr>                          
                               {% endfor %}
                           </table>                     
                 </div>
             </div>
             
+<!--
             <div class="col-sm-4", id='leftpane'>
                 <div class='container', id='box', background-color='#eee'> 
                 
                 </div>
             </div>
+-->
             
         </div>
     </div> 
@@ -173,10 +175,11 @@
 
     $('.btn').css('line-height','10px').css('width','250px')
 //    $("#backgroundshade").css('background-color','rgba(240,240,240,0.9)')
-    $("#box").css('position', 'fixed').css('left','63%').css('top','15%');
+//    $("#box").css('position', 'fixed').css('left','63%').css('top','15%');
 </script>    
 
 
+<!--
 <script>
     function hovercourse(course_name){
     $("[id = '"+course_name+"']").css('r','50px')
@@ -187,8 +190,9 @@
       };
 
 </script>      
+-->
       
-      
+<!--      
 <script>
     
 var width = $(window).width() * 0.3,
@@ -262,6 +266,7 @@ d3.csv("static/LDA_results_CEU_26_topics.csv", function(error, data) {
 
 });
 
+-->
 
 //d3.select("#box2").append("ul").selectAll("li")
 //    .data(recommended_courses)
