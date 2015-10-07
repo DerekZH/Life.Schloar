@@ -56,20 +56,18 @@ def cities_input():
 def course_output():
     query_string = request.args.get("ID")
 
-    relevance_courses, serendipity_courses = lda_w2v_recommender(query_string, lda, LDA_results, mycorpus_dict, w2v, w2v_course_with_top_words, w2v_course_semantic_matrix, w2v_course_semantic_norm, w2v_courses, w2v_course_list_to_match_semantic_matrix, related_topics_dic, sliding_weight=True)
-    
-    recommended_courses = relevance_courses + serendipity_courses
-    
-    cols = ['course_name','tsne_1','tsne_2','total_enrollment', 'final_provider', 'final_link', 'final_effort', 'final_price', 'final_img','course_name_for_hover','course_name_for_unhover', 'course_name_with_underscore']
-    relevance_courses_for_html = LDA_results.loc[LDA_results.course_name.isin(relevance_courses)][cols].to_dict('records')
-    serendipity_courses_for_html = LDA_results.loc[LDA_results.course_name.isin(serendipity_courses)][cols].to_dict('records')
+    try:
+        relevance_courses, serendipity_courses = lda_w2v_recommender(query_string, lda, LDA_results, mycorpus_dict, w2v, w2v_course_with_top_words, w2v_course_semantic_matrix, w2v_course_semantic_norm, w2v_courses, w2v_course_list_to_match_semantic_matrix, related_topics_dic, sliding_weight=True)
 
-    print relevance_courses_for_html
-    print '###################'
-    
-    print serendipity_courses_for_html
-    
-    return render_template('output.html', relevance_courses_for_html = relevance_courses_for_html, serendipity_courses_for_html = serendipity_courses_for_html, recommended_courses = '*'.join(recommended_courses))
+        recommended_courses = relevance_courses + serendipity_courses
+
+        cols = ['course_name','tsne_1','tsne_2','total_enrollment', 'final_provider', 'final_link', 'final_effort', 'final_price', 'final_img','course_name_for_hover','course_name_for_unhover', 'course_name_with_underscore']
+        relevance_courses_for_html = LDA_results.loc[LDA_results.course_name.isin(relevance_courses)][cols].to_dict('records')
+        serendipity_courses_for_html = LDA_results.loc[LDA_results.course_name.isin(serendipity_courses)][cols].to_dict('records')
+
+        return render_template('output.html', relevance_courses_for_html = relevance_courses_for_html, serendipity_courses_for_html = serendipity_courses_for_html, recommended_courses = '*'.join(recommended_courses))
+    except:
+        return render_template('500.html')
 
 @app.route('/world_map')
 def course_map_output():
