@@ -50,9 +50,6 @@ def lda_w2v_loader():
             for string in self.input.values(): # for each relevant file 
                 yield tokenize(string, stop_words)
 
-#    with open('Combined_Udemy_Coursera_Reviews.pickle', 'rb') as f:
-#        Udemy_Coursera_combined_train = pickle.load(f)
-
     with open('Combined_Udemy_Coursera_Edx_Reviews.pickle', 'rb') as f:
         Udemy_Coursera_combined_train = pickle.load(f)
 
@@ -60,13 +57,10 @@ def lda_w2v_loader():
     mycorpus.dictionary.filter_extremes()
     mycorpus.dictionary.items()
     mycorpus_dict = gensim.corpora.dictionary.Dictionary()
-#    mycorpus_dict= mycorpus_dict.load('LDA_Udemy_Coursera_20_topics_gensim_dict.dict')
     mycorpus_dict= mycorpus_dict.load('LDA_Udemy_Coursera_Edx_26_topics_gensim_dict.dict')
     
     lda = gensim.models.ldamulticore.LdaMulticore(id2word=mycorpus.dictionary.id2token)
-#    lda = lda.load('lda_full_20_topics.lda')
     lda = lda.load('LDA_Udemy_Coursera_Edx_26_topics.lda')
-#    LDA_results = pd.read_csv('Udemy_Coursera_4000_LDA_results.csv')
     LDA_results = pd.read_csv('LDA_results_CEU_26_topics.csv')
     
     
@@ -88,12 +82,6 @@ def lda_w2v_loader():
 
     with open('LDA_related_topics.pickle', 'rb') as f:
         related_topics_dic = pickle.load(f)
-#    courses = []
-#    for n in LDA_results.course_name:
-#        if is_ascii(n):
-#            courses.append(n)
-#            
-#    courses = list(set(courses))
     
     return lda, LDA_results, mycorpus_dict, w2v, w2v_course_with_top_words, w2v_course_semantic_matrix, w2v_course_semantic_norm, w2v_courses, w2v_course_list_to_match_semantic_matrix, related_topics_dic
 
@@ -128,7 +116,7 @@ def lda_w2v_recommender(input_string, lda, LDA_results, mycorpus_dict, w2v, w2v_
     lda_recom = []
 
     off_set = 0
-    ######## code below is not a complete fix, need to update
+
     for i in range(num_to_recommend):
         if is_ascii(LDA_results.iloc[i+off_set].course_name):
             lda_recom.append(LDA_results.iloc[i+off_set+couse_index_padding].course_name)
@@ -136,10 +124,6 @@ def lda_w2v_recommender(input_string, lda, LDA_results, mycorpus_dict, w2v, w2v_
             off_set += 1
             lda_recom.append(LDA_results.iloc[i+off_set+couse_index_padding].course_name)
 
-    #    print '\n\nLDA results'        
-    #    for i in range(100):
-    #        print LDA_results.iloc[i].course_name, LDA_results.iloc[i].cos_similarity
-    #    print '\n\n'
 
     ##### Word2Vec Section
 
@@ -153,9 +137,7 @@ def lda_w2v_recommender(input_string, lda, LDA_results, mycorpus_dict, w2v, w2v_
     else:
         des_1 = [x for x in paragraph_preprocessing(input_string) if x in vocab]
 
-
     des_1_norm = np.linalg.norm(w2v_get_semantics_for_list_of_words(w2v, des_1))
-
     
     similarity_results = w2v_course_semantic_matrix.dot(w2v_get_semantics_for_list_of_words(w2v, des_1))/w2v_course_semantic_norm/des_1_norm
     semantic_score_dic = dict(zip(similarity_results, w2v_course_list_to_match_semantic_matrix))
@@ -167,9 +149,10 @@ def lda_w2v_recommender(input_string, lda, LDA_results, mycorpus_dict, w2v, w2v_
     LDA_results['w2v_cos_similarity'] = LDA_results.course_name.apply(lambda x: get_cos_similariy(semantic_score_rev_dic, x))
 
 
+    # most relevant course recommendation - LDA and w2v blending
     if sliding_weight:
         recom_results = []
-        for i in [num_ind * 0.15 for num_ind in range(5)]:   # x here is the weight for LDA results
+        for i in [num_ind * 0.15 for num_ind in range(5)]:   # i here is the weight for LDA results
             LDA_results['weighted_cs'] = LDA_results.lda_cos_similarity * i + LDA_results.w2v_cos_similarity * (1-i)
             recom_result = LDA_results.sort('weighted_cs', ascending=False).course_name.iloc[:num_to_recommend+10].values
 
@@ -185,12 +168,9 @@ def lda_w2v_recommender(input_string, lda, LDA_results, mycorpus_dict, w2v, w2v_
         recom_results = [x for x in recom_results if x != input_string]
         recom_results = [x for x in recom_results if is_ascii(x)]
 
-    # return recom_results[:num_to_recommend]
-
-    print 'recom courses:', recom_results
-
+        
+    # same topic revserve LDA ranking recommendations
     dominant_topic = get_dominant_topic(LDA_results, input_lda_assignment)
-    print 'dominant topic is', dominant_topic
     LDA_results_dominant_topic = LDA_results.loc[(LDA_results[dominant_topic]>0.5) & (LDA_results.course_name != input_string)]
     weight_of_lda = 0.75
     LDA_results_dominant_topic['weighted_cs_inverse_lda'] = (1 - LDA_results_dominant_topic.lda_cos_similarity)*weight_of_lda + LDA_results_dominant_topic.w2v_cos_similarity*(1-weight_of_lda)
@@ -199,7 +179,6 @@ def lda_w2v_recommender(input_string, lda, LDA_results, mycorpus_dict, w2v, w2v_
 
 
     #cross topic recommendations
-    print 'related topics are ', related_topics_dic[dominant_topic]
     try:
         del LDA_results_related_topic
     except:
