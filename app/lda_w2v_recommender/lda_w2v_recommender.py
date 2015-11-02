@@ -196,4 +196,7 @@ def lda_w2v_recommender(input_string, lda, LDA_results, mycorpus_dict, w2v, w2v_
 
     serendipity_list = serendipity_results_df.sort('w2v_cos_similarity', ascending=False).iloc[0:3].course_name.values.tolist()
 
+    print 'dongdong'
+    print serendipity_results_df[['course_name','w2v_cos_similarity']]
+    
     return recom_results[:3], serendipity_list
